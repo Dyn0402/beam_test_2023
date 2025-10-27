@@ -9,6 +9,7 @@ using namespace std;
 
 #include "TFile.h"
 #include "TTree.h"
+#include "RtypesCore.h"
 
 #include <arpa/inet.h>
 #include "dreamdataline.h"
@@ -64,17 +65,17 @@ int main( int argc, const char **argv) {
   uint16_t data = 0;
 
   // data fields
-  short    iFeuH = 0;
-  uint64_t timestamp = 0;      
-  uint64_t old_timestamp = 0;      
-  uint64_t delta_timestamp = 0;      
-  uint16_t fine_timestamp = 0;
-  uint64_t eventID   = 0;      
-  uint32_t FeuID = 0;
-  uint16_t sampleID = 0;
-  uint16_t channelID = 0;
-  uint16_t dreamID = 0;
-  uint16_t ampl = 0;
+  Short_t   iFeuH = 0;
+  ULong64_t timestamp = 0;
+  ULong64_t old_timestamp = 0;
+  ULong64_t delta_timestamp = 0;
+  UShort_t  fine_timestamp = 0;
+  ULong64_t eventID   = 0;
+  UInt_t    FeuID = 0;
+  UShort_t  sampleID = 0;
+  UShort_t  channelID = 0;
+  UShort_t  dreamID = 0;
+  UShort_t  ampl = 0;
 
   // useful vairables
   bool isEvent = false;  // check the end of the event
@@ -92,13 +93,14 @@ int main( int argc, const char **argv) {
   TFile fout(outputFileName.data(), "recreate");
   TTree nt("nt","nt");
   nt.SetDirectory(&fout);
-  nt.Branch("eventId",&eventID );
-  nt.Branch("timestamp",&timestamp);
-  nt.Branch("delta_timestamp",&delta_timestamp);
-  nt.Branch("ftst",&fine_timestamp);
-  nt.Branch("sample",&sample);
-  nt.Branch("channel",&channel);
-  nt.Branch("amplitude",&amplitude);
+
+  nt.Branch("eventId",         &eventID,         "eventId/l");
+  nt.Branch("timestamp",       &timestamp,       "timestamp/l");
+  nt.Branch("delta_timestamp", &delta_timestamp, "delta_timestamp/l");
+  nt.Branch("ftst",            &fine_timestamp,  "ftst/s");
+  nt.Branch("sample",          &sample);
+  nt.Branch("channel",         &channel);
+  nt.Branch("amplitude",       &amplitude);
 
   // loop over the file
   while( true ){
