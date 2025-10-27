@@ -67,10 +67,9 @@ void convertTree(const char* inputFileName = "ftest.root",
     nt.Branch("delta_timestamp", &delta_timestamp, "delta_timestamp/l");
     nt.Branch("ftst", &fine_timestamp, "ftst/s");
 
-    // --- You can define a single flat array if you prefer: ---
     std::vector<UShort_t> amp_flat((maxChannels + 1) * (maxSamples + 1), 0);
-    nt.Branch("amp", amp_flat.data(),
-              Form("amp[%d][%d]/s", maxChannels + 1, maxSamples + 1));
+    nt.Branch("amplitude", amp_flat.data(),
+              Form("amplitude[%d][%d]/s", maxChannels + 1, maxSamples + 1));
 
     // --- Loop over entries and fill ---
     Long64_t nEntries = inputTree->GetEntries();
