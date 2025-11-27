@@ -156,7 +156,8 @@ int main( int argc, const char **argv) {
           timestamp +=  (uint64_t)get_timestamp( data )<<24;
         }
         else if( iFeuH == 7 ){
-          timestamp +=  (uint64_t)get_timestamp( data )<<36;
+//          timestamp +=  (uint64_t)get_timestamp( data )<<36;
+          timestamp += (uint64_t)(get_timestamp(data) & 0xFF) << 36;
         }
 
         iFeuH++;
