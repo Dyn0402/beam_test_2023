@@ -84,6 +84,7 @@ int main( int argc, const char **argv) {
   int i = 0;             // just a counter
   bool debug = false;     // printing stuff
   char prev = cout.fill(); // for debug formatting
+  bool is_eof = false;
 
   // store data
   vector<uint16_t> sample;
@@ -103,7 +104,7 @@ int main( int argc, const char **argv) {
   nt.Branch("amplitude",       &amplitude);
 
   // loop over the file
-  while( true ){
+  while( true && !is_eof ){
 
     //if( i > 600 ) break;
     //if( i > 574 ) debug = true;
@@ -117,7 +118,7 @@ int main( int argc, const char **argv) {
 
       isEvent = true; // we are in an event
       isFT = false;
-      isZS = get_zs_mode(data);  // true if zero supressed data, false otherwise
+      isZS = get_zs_mode(data);  // true if zero suppressed data, false otherwise
 
       timestamp = 0;      
       delta_timestamp = 0;      
@@ -134,7 +135,9 @@ int main( int argc, const char **argv) {
         }
         if( iFeuH == 0 ){
           FeuID = get_Feu_ID( data );
-          sampleID = data & 0x800;
+//          sampleID = data & 0x800;
+          sampleID = (data & 0x800) >> 3;  // Shift 11th bit down to bit 8
+//          sampleID = 0;
         }
         else if( iFeuH == 1 ){
           eventID =  get_Event_ID( data );
@@ -161,7 +164,11 @@ int main( int argc, const char **argv) {
         }
 
         iFeuH++;
-        if (read16(is, data)) break;
+        if (read16(is, data)) {
+            if (debug) cout << "EOF reached while reading FEU header." << endl;
+            is_eof = true;
+            break;
+        }
       }
 
       if ( debug ){
